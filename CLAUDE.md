@@ -17,11 +17,17 @@ Agent"** in the actual orgs. When talking to the user:
 - **Never say "AVA"** in your responses. Refer to the agent as **"the
   Agentforce Service Agent"** (or "the voice agent" / "the chat agent" when
   disambiguating between `AVA` and `AVA_Voice_Agent2`).
-- It's fine to reference the literal string `AVA` when it's unavoidably part
-  of a technical artifact you're quoting or instructing the user to use
-  verbatim — a file path, a `--api-name` flag, a SOQL filter, a developer
-  name in metadata. Don't editorialize those away; just don't use "AVA" as
-  the agent's name in your own prose.
+- Same rule for **`AVA_Voice_Agent`** — the sibling voice agent living in the
+  reference org `org2` (seeded to mirror `org1`'s dashboard numbers; see
+  `context/CONTEXT.md`). Don't say "AVA_Voice_Agent" in your prose either —
+  call it "the voice agent" (or disambiguate by org, e.g. "org2's voice
+  agent") instead. Don't confuse it with `AVA_Voice_Agent2`, the one actively
+  developed in `org1` and documented under `context/agent/`.
+- It's fine to reference the literal string `AVA` or `AVA_Voice_Agent` when
+  it's unavoidably part of a technical artifact you're quoting or
+  instructing the user to use verbatim — a file path, a `--api-name` flag, a
+  SOQL filter, a developer name in metadata. Don't editorialize those away;
+  just don't use them as the agent's name in your own prose.
 
 ## Start here
 
