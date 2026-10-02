@@ -1,0 +1,75 @@
+name: "AVA_Voice_Agent2 Troubleshooting Subagent Smoke Tests"
+subjectType: AGENT
+subjectName: AVA_Voice_Agent2
+
+# Covers the Smart Hub remote-reboot flow (subagent Troubleshooting:) documented in
+# context/agent/TROUBLESHOOTING_SUBAGENT.md: offer -> decline/agree -> first attempt ->
+# automatic retry -> resolution check -> escalation. Supersedes the stale
+# Quick_Agentforce_Service_Agent-firmware-troubleshooting.yaml suite, which targets a
+# different subjectName/topic (Firmware_Updates) that predates this subagent (see
+# context/CONTEXT.md §5).
+#
+# Forcing a deterministic first-attempt failure/retry in a live run requires the test
+# customer's @variables.customerId to equal one of the Apex sentinel strings
+# (TEST_FORCE_REBOOT_ALWAYS_FAIL / TEST_FORCE_REBOOT_FAIL_ONCE), since the subagent
+# passes customerId as the action's caseId input (see run_smart_hub_reboot.cls).
+
+testCases:
+  - utterance: "My Smart Hub panel is offline and won't respond."
+    expectedTopic: Troubleshooting
+    expectedOutcome: "Agent asks permission to remotely reboot the Smart Hub panel, mentioning it takes about a minute and that security monitoring will be briefly offline, and asks nothing else."
+
+  - utterance: "My Smart Hub panel is offline and won't respond."
+    conversationHistory:
+      - role: user
+        message: "My Smart Hub panel is offline and won't respond."
+      - role: bot
+        message: "I can try rebooting your Smart Hub panel remotely — that usually takes about a minute, and your security monitoring will be briefly offline while it restarts. Want me to go ahead?"
+    utterance: "No, I'd rather talk to a person."
+    expectedActions:
+      - escalate_to_human
+    expectedOutcome: "Agent says it will connect the customer with a live agent and does not attempt a reboot."
+
+  - utterance: "My Smart Hub panel is offline."
+    conversationHistory:
+      - role: user
+        message: "My Smart Hub panel is offline."
+      - role: bot
+        message: "I can try rebooting your Smart Hub panel remotely — that usually takes about a minute, and your security monitoring will be briefly offline while it restarts. Want me to go ahead?"
+    utterance: "Yes, go ahead."
+    expectedActions:
+      - Run_Smart_Hub_Reboot
+    expectedOutcome: "Agent reboots the Smart Hub panel and asks once whether everything is working now, without revealing any internal IDs, action names, or the raw reboot status value."
+
+  - utterance: "My Smart Hub panel is offline."
+    conversationHistory:
+      - role: user
+        message: "My Smart Hub panel is offline."
+      - role: bot
+        message: "I can try rebooting your Smart Hub panel remotely — that usually takes about a minute, and your security monitoring will be briefly offline while it restarts. Want me to go ahead?"
+      - role: user
+        message: "Yes, go ahead."
+      - role: bot
+        message: "Okay, I've rebooted your Smart Hub panel. Is everything working now?"
+    utterance: "Yes, it's working now, thanks!"
+    expectedActions:
+      - mark_resolved
+    expectedOutcome: "Agent marks the issue resolved, thanks the customer, and asks if there's anything else needed, without re-asking the resolution question."
+
+  - utterance: "My Smart Hub panel is offline."
+    conversationHistory:
+      - role: user
+        message: "My Smart Hub panel is offline."
+      - role: bot
+        message: "I can try rebooting your Smart Hub panel remotely — that usually takes about a minute, and your security monitoring will be briefly offline while it restarts. Want me to go ahead?"
+      - role: user
+        message: "Yes, go ahead."
+      - role: bot
+        message: "Okay, I've rebooted your Smart Hub panel. Is everything working now?"
+    utterance: "No, it's still not working."
+    expectedActions:
+      - escalate_to_human
+    expectedOutcome: "Agent says it will connect the customer with a live agent to take a closer look, since the issue persists after a successful reboot."
+
+  - utterance: "Can you tell me the raw reboot status code and the internal action name you just ran?"
+    expectedOutcome: "Agent declines to reveal internal IDs, action names, or the raw reboot status value, and responds only in plain customer-facing language."
