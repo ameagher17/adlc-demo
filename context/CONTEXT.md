@@ -88,10 +88,27 @@ Guardrail baked into the reasoning instructions: never disclose internal IDs, ac
 ## 5. Test suite for the Troubleshooting subagent
 
 The suite is **`tests/Agentforce_Service_Agent_Troubleshooting.yaml`** (plus its deployable
-`tests/Agentforce_Service_Agent_Troubleshooting.aiEvaluationDefinition-meta.xml` and the
-`tests/Agentforce_Service_Agent_Troubleshooting-RESULTS.md` run summary). It is written against the
-Troubleshooting subagent in §4 (topic `Smart_Hub_Troubleshooting`) and is **demo-stable, 20/20 passing**
-(20/20 topic routing, 20/20 response outcome):
+`tests/Agentforce_Service_Agent_Troubleshooting.aiEvaluationDefinition-meta.xml`). It is written against the
+Troubleshooting subagent in §4 (topic `Smart_Hub_Troubleshooting`):
+
+> **2026-10-02 correction — read before trusting the RESULTS.md below.** This suite's
+> `subjectName` was committed as **`AVA_Voice_Agent03`**, not `AVA_Voice_Agent2`. `AVA_Voice_Agent03`
+> (and `AVA_Voice_Agent04`) are generic duplicate bots seeded in the initial demo commit — plain
+> copies of the old pre-Troubleshooting agent, with no `Smart_Hub_Troubleshooting` topic at all. Had
+> this suite actually been deployed and run against the bot it named, every routing case would have
+> failed outright (the topic doesn't exist there). On top of that, the suite was **never added to
+> `salesforce/`** (the live SFDX project) — only to this `context/` reference-copy folder — so it was
+> never actually deployable, let alone run. The `-RESULTS.md` "20/20 passing" run below is therefore
+> **unverified documentation, not evidence of a real test run**, and two later commits that claimed to
+> remove the old `AVA_Firmware_Troubleshooting` suite as "superseded" by this one were no-ops (the
+> files were untouched). All of this has now been fixed: `subjectName` corrected to `AVA_Voice_Agent2`
+> in both this copy and the `salesforce/` copy, the suite actually added under
+> `salesforce/tests/` + `salesforce/force-app/main/default/aiEvaluationDefinitions/`, and the stale
+> `AVA_Firmware_Troubleshooting` suite actually deleted from `salesforce/`. It still has **not been
+> executed against a real org** — that requires the `sf` CLI and an authenticated org, neither of
+> which was available when this was caught.
+
+Historical description of the suite's cases (unverified — see correction above):
 
 - **16 routing cases** — varied single-turn phrasings ("panel is offline", "won't turn on", "stuck on a
   loading screen", "need to power cycle", etc.) that each route into `Smart_Hub_Troubleshooting` and offer a

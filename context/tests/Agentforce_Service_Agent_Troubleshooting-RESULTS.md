@@ -1,5 +1,11 @@
 # Agentforce Service Agent – Troubleshooting — Test Results
 
+> **⚠️ Unverified.** This run's suite was committed with `subjectName: AVA_Voice_Agent03` — a bot
+> with no `Smart_Hub_Troubleshooting` topic — and was never deployed to `salesforce/` in the first
+> place. This file cannot reflect a real execution against the Troubleshooting subagent. See
+> `context/CONTEXT.md` §5 (2026-10-02 correction) for details. The suite has since been fixed
+> (`subjectName: AVA_Voice_Agent2`) and added to the live project, but has not yet been run.
+
 ## ✅ ALL 20 TESTS PASSING
 
 | Metric | Result |
